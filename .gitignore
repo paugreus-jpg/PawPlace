@@ -1,0 +1,90 @@
+# ============================================================
+# SECRETS & CREDENTIALS  — NEVER commit these
+# ============================================================
+local.properties
+*.keystore
+*.jks
+keystore.properties
+secrets.properties
+google-services.json
+google-services-debug.json
+service-account*.json
+*credentials*.json
+*.pem
+*.p12
+*.pfx
+
+# ============================================================
+# ANDROID BUILD OUTPUT
+# ============================================================
+/build/
+app/build/
+**/build/
+
+# ============================================================
+# GRADLE
+# ============================================================
+.gradle/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# ============================================================
+# ANDROID STUDIO / INTELLIJ IDEA
+# ============================================================
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/.gitignore
+.idea/deploymentTargetDropDown.xml
+.idea/androidTestResultsUserPreferences.xml
+.idea/deploymentTargetSelector.xml
+.claude/
+
+# ============================================================
+# NATIVE BUILD
+# ============================================================
+.externalNativeBuild/
+.cxx/
+/captures/
+
+# ============================================================
+# COMPILED / GENERATED FILES
+# ============================================================
+*.class
+*.dex
+*.ap_
+*.apk
+*.aab
+*.so
+gen/
+
+# ============================================================
+# OS FILES
+# ============================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================
+# LOGS & TEMP FILES
+# ============================================================
+*.log
+*.tmp
+*.temp
+*.swp
+*.bak
+.env
+.env.*

@@ -1,0 +1,45 @@
+<!-- File: app/src/main/res/drawable/ic_pawplace_new_pin.xml
+     "New location" pin — amber glass disc. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+
+    <path
+        android:pathData="M20,20 m-20,0 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="20" android:centerY="20"
+                android:gradientRadius="20">
+                <item android:offset="0.0" android:color="#66F5C77E"/>
+                <item android:offset="1.0" android:color="#00F5C77E"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="8" android:startY="8"
+                android:endX="32" android:endY="32">
+                <item android:offset="0.0" android:color="#33FFFFFF"/>
+                <item android:offset="1.0" android:color="#66000000"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M20,20 m-13,0 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 Z"
+        android:strokeColor="#CCF5C77E"
+        android:strokeWidth="1.2"
+        android:fillColor="#00000000"/>
+
+    <path
+        android:pathData="M20,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 Z"
+        android:fillColor="#FFF5C77E"/>
+</vector>

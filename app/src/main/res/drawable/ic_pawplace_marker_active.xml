@@ -1,0 +1,47 @@
+<!-- File: app/src/main/res/drawable/ic_pawplace_marker_active.xml
+     Active state — bigger, brighter. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="52dp"
+    android:height="52dp"
+    android:viewportWidth="52"
+    android:viewportHeight="52">
+
+    <path
+        android:pathData="M26,26 m-26,0 a26,26 0 1,0 52,0 a26,26 0 1,0 -52,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="radial"
+                android:centerX="26" android:centerY="26"
+                android:gradientRadius="26">
+                <item android:offset="0.0" android:color="#887DD8FF"/>
+                <item android:offset="0.7" android:color="#207DD8FF"/>
+                <item android:offset="1.0" android:color="#007DD8FF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M26,26 m-18,0 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="12" android:startY="10"
+                android:endX="40" android:endY="42">
+                <item android:offset="0.0" android:color="#3DFFFFFF"/>
+                <item android:offset="0.5" android:color="#147DD8FF"/>
+                <item android:offset="1.0" android:color="#66000000"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:pathData="M26,26 m-18,0 a18,18 0 1,0 36,0 a18,18 0 1,0 -36,0 Z"
+        android:strokeColor="#CC7DD8FF"
+        android:strokeWidth="1.4"
+        android:fillColor="#00000000"/>
+
+    <path
+        android:pathData="M26,26 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z"
+        android:fillColor="#FFEAF6FF"/>
+</vector>

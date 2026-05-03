@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PawPlace</string>
+    <string name="map_screen">Mapa</string>
+    <string name="list_screen">Lista</string>
+    <string name="add_place">Añadir lugar</string>
+    <string name="delete">Eliminar</string>
+
+    <string name="name">Nombre</string>
+    <string name="description">Descripción</string>
+    <string name="type">Tipo</string>
+    <string name="image_optional">Imagen (opcional)</string>
+    <string name="add_image">Añadir imagen</string>
+    <string name="change_image">Cambiar</string>
+    <string name="rating">Valoración</string>
+    <string name="amenities">Amenidades (separadas por comas)</string>
+    <string name="save_location">Guardar ubicación</string>
+
+    <string name="type_park">Parque</string>
+    <string name="type_beach">Playa</string>
+    <string name="type_restaurant">Restaurante</string>
+    <string name="type_vet">Veterinario</string>
+    <string name="type_cafe">Cafetería</string>
+
+    <string name="rating_format">★ %d/5</string>
+    <string name="image_selected">Imagen seleccionada</string>
+    <string name="edit">Editar</string>
+    <string name="amenities_title">Amenidades:</string>
+    <string name="close">CERRAR</string>
+
+    <string name="search_placeholder">Buscar lugares...</string>
+    <string name="no_locations">No hay ubicaciones</string>
+    <string name="go_to_map">Ve al mapa para añadir tu primer lugar</string>
+    <string name="tip">💡 Consejo</string>
+    <string name="tip_message">Toca el icono del mapa en la navegación inferior para seleccionar una ubicación</string>
+
+    <string name="back">Volver atrás</string>
+    <string name="add_location">Añadir ubicación</string>
+    <string name="satellite">Satélite</string>
+    <string name="new_location">Nueva ubicación</string>
+
+    <string name="app_title">PawPlace</string>
+    <string name="app_subtitle">Guárdate los mejores lugares para tu peludo</string>
+    <string name="start">INICIAR</string>
+
+    <!-- Perfil y social -->
+    <string name="profile_screen">Perfil</string>
+    <string name="my_profile">Mi perfil</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="my_places">Mis lugares</string>
+    <string name="favorites">Favoritos</string>
+    <string name="no_favorites">Aún no tienes favoritos</string>
+    <string name="stats_places">Lugares · %d</string>
+    <string name="stats_favorites">Favoritos · %d</string>
+    <string name="by_user">Por %s</string>
+
+    <!-- Registro -->
+    <string name="register_title">Crear cuenta</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="display_name">Nombre</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="already_have_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="no_account">¿No tienes cuenta? Regístrate</string>
+    <string name="error_email">Email no válido</string>
+    <string name="error_password">Mínimo 8 caracteres con letras y números</string>
+    <string name="error_confirm">Las contraseñas no coinciden</string>
+    <string name="error_display_name">Introduce tu nombre</string>
+
+    <!-- Perfil edit -->
+    <string name="bio">Biografía</string>
+    <string name="city">Ciudad</string>
+    <string name="photo_url">URL de foto</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- Mascota -->
+    <string name="my_pet">Mi mascota</string>
+    <string name="add_pet">Añade tu mascota</string>
+    <string name="pet_name">Nombre de la mascota</string>
+    <string name="pet_breed">Raza</string>
+    <string name="pet_age">Edad (años)</string>
+    <string name="pet_photo_url">URL foto mascota</string>
+
+    <!-- Eliminar cuenta -->
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="delete_account_title">¿Eliminar cuenta?</string>
+    <string name="delete_account_message">Esta acción no se puede deshacer. Se eliminarán todos tus lugares, favoritos y datos de perfil.</string>
+    <string name="delete_account_confirm">Eliminar</string>
+    <string name="delete_account_password">Introduce tu contraseña para confirmar</string>
+
+    <!-- Detalle de lugar -->
+    <string name="place_detail">Detalle del lugar</string>
+    <string name="view_on_map">Ver en mapa</string>
+    <string name="view_detail">Ver detalle</string>
+    <string name="comments_title">Comentarios (%d)</string>
+    <string name="no_comments">Sé el primero en comentar</string>
+    <string name="add_comment">Escribe un comentario…</string>
+    <string name="send_comment">Enviar</string>
+    <string name="delete_comment">Eliminar comentario</string>
+
+    <!-- Paseos -->
+    <string name="walks_screen">Paseos</string>
+    <string name="walks_title">Paseos</string>
+    <string name="walks_tab_community">Comunidad</string>
+    <string name="walks_tab_mine">Mis paseos</string>
+    <string name="walks_tab_favorites">Favoritos</string>
+    <string name="walks_empty_community">Aún no hay paseos públicos</string>
+    <string name="walks_empty_mine">Aún no has grabado ningún paseo</string>
+    <string name="walks_empty_favorites">Aún no tienes paseos favoritos</string>
+    <string name="walk_record_title">Grabar paseo</string>
+    <string name="walk_start">Iniciar</string>
+    <string name="walk_pause">Pausar</string>
+    <string name="walk_resume">Reanudar</string>
+    <string name="walk_stop">Detener</string>
+    <string name="walk_save">Guardar paseo</string>
+    <string name="walk_save_title">Guardar paseo</string>
+    <string name="walk_name">Nombre del paseo</string>
+    <string name="walk_description">Descripción</string>
+    <string name="walk_select_dog">Asociar a un perro</string>
+    <string name="walk_no_dogs_available">Necesitas crear un perro antes</string>
+    <string name="walk_visibility">Hacer público</string>
+    <string name="walk_visibility_desc">Otros usuarios podrán verlo y seguirlo</string>
+    <string name="walk_distance_format">%.2f km</string>
+    <string name="walk_duration_format">%1$d:%2$02d</string>
+    <string name="walk_detail_title">Detalle del paseo</string>
+    <string name="walk_follow">Seguir paseo</string>
+    <string name="walk_follow_title">Siguiendo paseo</string>
+    <string name="walk_associated_dog">Perro asociado</string>
+    <string name="walk_distance_label">Distancia</string>
+    <string name="walk_duration_label">Duración</string>
+    <string name="walk_points_label">Puntos</string>
+    <string name="walk_recording_in_progress">Hay un paseo en grabación</string>
+    <string name="walk_discard">Descartar</string>
+
+    <!-- Notificaciones -->
+    <string name="notifications_screen">Notificaciones</string>
+    <string name="notifications_mark_all_read">Marcar todo leído</string>
+    <string name="notifications_settings">Ajustes</string>
+    <string name="notifications_empty">Sin notificaciones</string>
+    <string name="notifications_empty_desc">Aquí aparecerán tus notificaciones</string>
+    <string name="notifications_settings_title">Ajustes de notificaciones</string>
+    <string name="notif_global">Activar notificaciones</string>
+    <string name="notif_social">Notificaciones sociales</string>
+    <string name="notif_reminders">Recordatorios de paseo</string>
+    <string name="notif_dnd">No molestar</string>
+    <string name="notif_dnd_from">Desde las</string>
+    <string name="notif_dnd_to">Hasta las</string>
+    <string name="notif_dnd_disabled">Desactivado</string>
+    <string name="notif_channel_social">Social</string>
+    <string name="notif_channel_reminders">Recordatorios de paseo</string>
+    <string name="notif_channel_system">Sistema</string>
+    <string name="notif_reminder_title">¡Hora del paseo!</string>
+    <string name="notif_reminder_body">Es el momento de sacar a %s</string>
+    <string name="just_now">Ahora mismo</string>
+    <string name="minutes_ago">Hace %d min</string>
+    <string name="hours_ago">Hace %d h</string>
+    <string name="days_ago">Hace %d d</string>
+
+    <!-- Ajustes de idioma y tema -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_language">Idioma</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_english">Inglés</string>
+    <string name="settings_theme">Apariencia</string>
+    <string name="theme_dark">Tema oscuro</string>
+
+    <!-- Filtros del mapa -->
+    <string name="filter_all">Todo</string>
+    <string name="filter_mine">Mis lugares</string>
+    <string name="filter_community">Comunidad</string>
+
+    <!-- Acciones sociales -->
+    <string name="like_action">Me gusta</string>
+    <string name="share">Compartir</string>
+
+    <!-- Strings extraídas de pantallas -->
+    <string name="basic_info">Información básica</string>
+    <string name="name_required">El nombre es obligatorio</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Contraseña</string>
+    <string name="enter_button">Entrar</string>
+    <string name="enter_city">Introduce tu ciudad</string>
+    <string name="change_pet_photo">Cambiar foto de mascota</string>
+    <string name="delete_place_title">Eliminar lugar</string>
+    <string name="delete_place_confirm_msg">¿Seguro que quieres eliminar \"%s\"?</string>
+
+    <!-- Añadir lugar -->
+    <string name="publish_to_community">Publicar en comunidad</string>
+    <string name="publish_community_desc">Otros usuarios lo verán en el mapa</string>
+    <string name="tap_to_add_photo">Toca para añadir foto</string>
+    <string name="empty_my_places">Aún no has creado ninguna ubicación</string>
+    <string name="empty_community_places">Aún no hay ubicaciones de comunidad</string>
+    <string name="pet_years_format">%d años</string>
+</resources>

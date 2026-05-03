@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pin de nueva ubicación — versión más pequeña, ámbar con centro hueco -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+
+    <!-- Sombra -->
+    <path
+        android:fillColor="#33000000"
+        android:pathData="M16,30 C16,30 4,19 4,12 C4,5.4 9.4,0 16,0 C22.6,0 28,5.4 28,12 C28,19 16,30 16,30 Z"
+        android:translateY="1.5"/>
+
+    <!-- Cuerpo ámbar -->
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M16,29 C16,29 4,18 4,11 C4,4.4 9.4,-1 16,-1 C22.6,-1 28,4.4 28,11 C28,18 16,29 16,29 Z"/>
+
+    <!-- Aro blanco -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,17 C13.2,17 11,14.8 11,12 C11,9.2 13.2,7 16,7 C18.8,7 21,9.2 21,12 C21,14.8 18.8,17 16,17 Z"/>
+
+    <!-- Punto interior ámbar -->
+    <path
+        android:fillColor="#F5A524"
+        android:pathData="M16,15 C14.9,15 14,14.1 14,13 C14,11.9 14.9,11 16,11 C17.1,11 18,11.9 18,13 C18,14.1 17.1,15 16,15 Z"/>
+
+</vector>

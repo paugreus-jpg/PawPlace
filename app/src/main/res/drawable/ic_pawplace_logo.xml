@@ -1,0 +1,40 @@
+<!-- File: app/src/main/res/drawable/ic_pawplace_logo.xml
+     PawPlace mark — teardrop pin with a paw cut as negative space. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Cuerpo del pin con gradiente glass -->
+    <path
+        android:pathData="M60,8 C84.3,8 104,27.7 104,52 C104,79 76,102 60,112 C44,102 16,79 16,52 C16,27.7 35.7,8 60,8 Z M60,38 C56.4,38 53.5,40.9 53.5,44.5 C53.5,48.1 56.4,51 60,51 L60,51 C63.6,51 66.5,48.1 66.5,44.5 C66.5,40.9 63.6,38 60,38 Z M44.5,40 m-5.2,0 a5.2,6.4 0 1,0 10.4,0 a5.2,6.4 0 1,0 -10.4,0 Z M55,33.5 m-4.6,0 a4.6,6 0 1,0 9.2,0 a4.6,6 0 1,0 -9.2,0 Z M65.5,33.5 m-4.6,0 a4.6,6 0 1,0 9.2,0 a4.6,6 0 1,0 -9.2,0 Z M76,40 m-5.2,0 a5.2,6.4 0 1,0 10.4,0 a5.2,6.4 0 1,0 -10.4,0 Z M60,68 m-13,-10 a13,10.5 0 1,0 26,0 a13,10.5 0 1,0 -26,0 Z"
+        android:fillType="evenOdd">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="20" android:startY="8"
+                android:endX="100" android:endY="112">
+                <item android:offset="0.0" android:color="#F2EAF6FF"/>
+                <item android:offset="0.45" android:color="#8C7DD8FF"/>
+                <item android:offset="1.0" android:color="#E60A2A3A"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Borde cian fino -->
+    <path
+        android:pathData="M60,8 C84.3,8 104,27.7 104,52 C104,79 76,102 60,112 C44,102 16,79 16,52 C16,27.7 35.7,8 60,8 Z"
+        android:strokeColor="#8C7DD8FF"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000"/>
+
+    <!-- Reflejo superior -->
+    <path
+        android:pathData="M34,28 Q48,16 70,16"
+        android:strokeColor="#8CFFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+</vector>

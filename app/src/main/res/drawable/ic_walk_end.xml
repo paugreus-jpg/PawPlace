@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marcador de fin de paseo — bandera de meta sobre círculo -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+
+    <path
+        android:fillColor="#22000000"
+        android:pathData="M18,34 C26.8,34 34,26.8 34,18 C34,9.2 26.8,2 18,2 C9.2,2 2,9.2 2,18 C2,26.8 9.2,34 18,34 Z"
+        android:translateY="1"/>
+
+    <path
+        android:fillColor="#C0392B"
+        android:pathData="M18,33 C26.3,33 33,26.3 33,18 C33,9.7 26.3,3 18,3 C9.7,3 3,9.7 3,18 C3,26.3 9.7,33 18,33 Z"/>
+
+    <!-- Asta de la bandera -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M13,9 L14.5,9 L14.5,27 L13,27 Z"/>
+
+    <!-- Bandera -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14.5,10 L25,10 L23,14 L25,18 L14.5,18 Z"/>
+</vector>
