@@ -3,6 +3,8 @@ package com.example.dogmap.data.repository
 import com.example.dogmap.data.db.DogDao
 import com.example.dogmap.data.models.Comment
 import com.example.dogmap.data.models.Dog
+import com.example.dogmap.data.models.NotificationType
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -62,6 +64,19 @@ class DogRepository(private val dogDao: DogDao) {
             try {
                 dogRef.update("likesCount", FieldValue.increment(1)).await()
                 dogDao.updateLikesCount(dogRemoteId, 1)
+            } catch (_: Exception) {}
+            try {
+                val dogSnap = dogRef.get().await()
+                val authorId = dogSnap.getString("authorId").orEmpty()
+                val placeName = dogSnap.getString("name").orEmpty()
+                val likerName = FirebaseAuth.getInstance().currentUser?.displayName.orEmpty()
+                if (authorId.isNotBlank() && authorId != uid) {
+                    val body = if (likerName.isNotBlank()) "$likerName le ha dado me gusta a $placeName"
+                               else "Alguien le ha dado me gusta a $placeName"
+                    pushNotification(authorId, NotificationType.WALK_LIKE,
+                        "¡A alguien le gusta tu lugar!", body,
+                        """{"dogRemoteId":"$dogRemoteId"}""")
+                }
             } catch (_: Exception) {}
             true
         }
@@ -135,6 +150,18 @@ class DogRepository(private val dogDao: DogDao) {
             .collection("comments")
             .add(comment)
             .await()
+        try {
+            val dogSnap = dogsCollection.document(dogRemoteId).get().await()
+            val authorId = dogSnap.getString("authorId").orEmpty()
+            val placeName = dogSnap.getString("name").orEmpty()
+            if (authorId.isNotBlank() && authorId != comment.authorId) {
+                val body = if (comment.authorName.isNotBlank()) "${comment.authorName} ha comentado en $placeName"
+                           else "Alguien ha comentado en $placeName"
+                pushNotification(authorId, NotificationType.LOCATION_COMMENT,
+                    "¡Nuevo comentario en tu lugar!", body,
+                    """{"dogRemoteId":"$dogRemoteId"}""")
+            }
+        } catch (_: Exception) {}
     }
 
     suspend fun deleteComment(dogRemoteId: String, commentId: String) {
@@ -149,11 +176,11 @@ class DogRepository(private val dogDao: DogDao) {
     fun observePublicDogs(): Flow<List<Dog>> = callbackFlow {
         val reg = dogsCollection
             .whereEqualTo("isPublic", true)
-            .orderBy("createdAt", Query.Direction.DESCENDING)
-            .addSnapshotListener { snap, _ ->
-                val list = snap?.documents?.mapNotNull { d ->
+            .addSnapshotListener { snap, error ->
+                if (error != null || snap == null) { trySend(emptyList()); return@addSnapshotListener }
+                val list = snap.documents.mapNotNull { d ->
                     d.toObject(Dog::class.java)?.copy(remoteId = d.id)
-                } ?: emptyList()
+                }.sortedByDescending { it.createdAt }
                 trySend(list)
             }
         awaitClose { reg.remove() }
@@ -179,5 +206,26 @@ class DogRepository(private val dogDao: DogDao) {
                 }
             awaitClose { reg.remove() }
         }
+    }
+
+    private suspend fun pushNotification(
+        targetUid: String,
+        type: NotificationType,
+        title: String,
+        body: String,
+        payloadJson: String = ""
+    ) {
+        val doc = hashMapOf(
+            "type" to type.name,
+            "title" to title,
+            "body" to body,
+            "payloadJson" to payloadJson,
+            "createdAt" to System.currentTimeMillis(),
+            "read" to false,
+            "ownerUid" to targetUid
+        )
+        firestore.collection("users/$targetUid/notifications")
+            .add(doc)
+            .await()
     }
 }

@@ -53,9 +53,13 @@ fun ListScreen(
 ) {
     val factory = LocalViewModelFactory.current
     val viewModel = viewModel<DogViewModel>(factory = factory)
-    val allDogs by viewModel.allDogs.collectAsState(initial = emptyList())
+    val myDogs by viewModel.myDogs.collectAsState()
     val publicDogs by viewModel.publicDogs.collectAsState()
     val favoriteDogs by viewModel.favoriteDogs.collectAsState()
+    val currentUid by viewModel.currentUid.collectAsState()
+    val communityDogs = remember(publicDogs, currentUid) {
+        publicDogs.filter { it.authorId != currentUid }
+    }
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedTypeIndex by remember { mutableStateOf<Int?>(null) }
@@ -177,8 +181,8 @@ fun ListScreen(
 
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
                 val list = when (page) {
-                    0 -> filter(allDogs)
-                    1 -> filter(publicDogs)
+                    0 -> filter(myDogs)
+                    1 -> filter(communityDogs)
                     else -> filter(favoriteDogs)
                 }
                 val emptyMessage = when (page) {

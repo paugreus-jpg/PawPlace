@@ -84,7 +84,7 @@ fun MapScreen(
     val context = LocalContext.current
     val factory = LocalViewModelFactory.current
     val viewModel: DogViewModel = viewModel(factory = factory)
-    val allDogs by viewModel.allDogs.collectAsState(initial = emptyList())
+    val myDogs by viewModel.myDogs.collectAsState()
     val publicDogs by viewModel.publicDogs.collectAsState()
     val mapFilter by viewModel.mapFilter.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
@@ -97,12 +97,12 @@ fun MapScreen(
         }
     }
 
-    val visibleDogs = remember(mapFilter, allDogs, publicDogs) {
+    val visibleDogs = remember(mapFilter, myDogs, publicDogs) {
         when (mapFilter) {
-            com.example.dogmap.viewmodel.MapFilter.PERSONAL -> allDogs
+            com.example.dogmap.viewmodel.MapFilter.PERSONAL -> myDogs
             com.example.dogmap.viewmodel.MapFilter.COMMUNITY -> publicDogs
             com.example.dogmap.viewmodel.MapFilter.ALL ->
-                (allDogs + publicDogs).distinctBy { it.remoteId.ifBlank { it.id.toString() } }
+                (myDogs + publicDogs).distinctBy { it.remoteId.ifBlank { it.id.toString() } }
         }
     }
 
