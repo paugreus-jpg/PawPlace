@@ -45,6 +45,9 @@
 
     <!-- Profile and social -->
     <string name="profile_screen">Profile</string>
+    <string name="profile_label">PROFILE</string>
+    <string name="places_label">PLACES</string>
+    <string name="your_places">Your places</string>
     <string name="my_profile">My profile</string>
     <string name="edit_profile">Edit profile</string>
     <string name="logout">Log out</string>

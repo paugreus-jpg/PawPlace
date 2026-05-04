@@ -26,7 +26,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.dogmap.R
 import com.example.dogmap.ui.theme.BrandPrimary
+
+/** Normaliza cualquier string de tipo (en cualquier idioma o clave) a una clave invariante. */
+fun typeKey(type: String): String = when (type.trim().lowercase()) {
+    "café", "cafe", "cafetería", "cafeteria" -> "cafe"
+    "parque", "park" -> "park"
+    "playa", "beach" -> "beach"
+    "restaurante", "restaurant" -> "restaurant"
+    "veterinario", "vet" -> "vet"
+    else -> type.lowercase()
+}
 
 /* ─── Background ─── */
 /** The deep-space radial gradient used behind every PawPlace surface. */
@@ -134,17 +146,12 @@ fun MarkerGlyph(
     type: String,
     size: Int = 36,
 ) {
-    val (accent, glyph) = when (type) {
-        "Café" -> Color(0xFF7DD8FF) to "☕"
-        "Cafe" -> Color(0xFF7DD8FF) to "☕"
-        "Parque" -> Color(0xFF9FF0C8) to "🌳"
-        "Park" -> Color(0xFF9FF0C8) to "🌳"
-        "Playa" -> Color(0xFFC9B8FF) to "🌊"
-        "Beach" -> Color(0xFFC9B8FF) to "🌊"
-        "Restaurante" -> Color(0xFFF5C77E) to "🍽"
-        "Restaurant" -> Color(0xFFF5C77E) to "🍽"
-        "Veterinario" -> Color(0xFFFF9DB1) to "✚"
-        "Vet" -> Color(0xFFFF9DB1) to "✚"
+    val (accent, glyph) = when (typeKey(type)) {
+        "cafe" -> Color(0xFF7DD8FF) to "☕"
+        "park" -> Color(0xFF9FF0C8) to "🌳"
+        "beach" -> Color(0xFFC9B8FF) to "🌊"
+        "restaurant" -> Color(0xFFF5C77E) to "🍽"
+        "vet" -> Color(0xFFFF9DB1) to "✚"
         else -> Color(0xFFF5C77E) to "🏠"
     }
 
@@ -172,11 +179,22 @@ fun MarkerGlyph(
 }
 
 /** Returns the brand accent for a place type — keeps glyph and chip colours in sync. */
-fun accentForType(type: String): Color = when (type) {
-    "Café", "Cafe" -> Color(0xFF7DD8FF)
-    "Parque", "Park" -> Color(0xFF9FF0C8)
-    "Playa", "Beach" -> Color(0xFFC9B8FF)
-    "Restaurante", "Restaurant" -> Color(0xFFF5C77E)
-    "Veterinario", "Vet" -> Color(0xFFFF9DB1)
+fun accentForType(type: String): Color = when (typeKey(type)) {
+    "cafe" -> Color(0xFF7DD8FF)
+    "park" -> Color(0xFF9FF0C8)
+    "beach" -> Color(0xFFC9B8FF)
+    "restaurant" -> Color(0xFFF5C77E)
+    "vet" -> Color(0xFFFF9DB1)
     else -> Color(0xFFF5C77E)
+}
+
+/** Traduce una clave de tipo (o string legacy) al nombre localizado según el idioma activo. */
+@Composable
+fun localizeType(type: String): String = when (typeKey(type)) {
+    "park" -> stringResource(R.string.type_park)
+    "beach" -> stringResource(R.string.type_beach)
+    "restaurant" -> stringResource(R.string.type_restaurant)
+    "vet" -> stringResource(R.string.type_vet)
+    "cafe" -> stringResource(R.string.type_cafe)
+    else -> type
 }

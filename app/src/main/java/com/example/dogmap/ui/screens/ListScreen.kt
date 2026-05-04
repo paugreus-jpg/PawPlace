@@ -39,6 +39,8 @@ import com.example.dogmap.ui.components.GlassPill
 import com.example.dogmap.ui.components.MarkerGlyph
 import com.example.dogmap.ui.components.PawPlaceBackground
 import com.example.dogmap.ui.components.accentForType
+import com.example.dogmap.ui.components.localizeType
+import com.example.dogmap.ui.components.typeKey
 import com.example.dogmap.ui.theme.BrandPrimary
 import com.example.dogmap.viewmodel.DogViewModel
 import kotlinx.coroutines.launch
@@ -56,8 +58,9 @@ fun ListScreen(
     val favoriteDogs by viewModel.favoriteDogs.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
-    var selectedType by remember { mutableStateOf<String?>(null) }
+    var selectedTypeIndex by remember { mutableStateOf<Int?>(null) }
 
+    val typeKeys = listOf("park", "beach", "restaurant", "vet", "cafe")
     val typeFilters = listOf(
         stringResource(R.string.type_park),
         stringResource(R.string.type_beach),
@@ -72,7 +75,7 @@ fun ListScreen(
     fun filter(dogs: List<Dog>): List<Dog> = dogs.filter { d ->
         val matchesSearch = searchQuery.isBlank() ||
             d.name.contains(searchQuery, ignoreCase = true)
-        val matchesType = selectedType == null || d.type == selectedType
+        val matchesType = selectedTypeIndex == null || typeKey(d.type) == typeKeys[selectedTypeIndex!!]
         matchesSearch && matchesType
     }
 
@@ -88,14 +91,14 @@ fun ListScreen(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "LUGARES",
+                        text = stringResource(R.string.places_label),
                         fontSize = 11.sp,
                         letterSpacing = 2.sp,
                         color = BrandPrimary.copy(alpha = 0.85f),
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "Tus lugares",
+                        text = stringResource(R.string.your_places),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFFF2F6F8),
@@ -142,19 +145,19 @@ fun ListScreen(
             ) {
                 item {
                     GlassPill(
-                        selected = selectedType == null,
-                        onClick = { selectedType = null },
+                        selected = selectedTypeIndex == null,
+                        onClick = { selectedTypeIndex = null },
                         label = stringResource(R.string.filter_all),
                     )
                 }
-                items(typeFilters) { type ->
+                items(typeFilters.indices.toList()) { i ->
                     GlassPill(
-                        selected = selectedType == type,
+                        selected = selectedTypeIndex == i,
                         onClick = {
-                            selectedType = if (selectedType == type) null else type
+                            selectedTypeIndex = if (selectedTypeIndex == i) null else i
                         },
-                        accent = accentForType(type),
-                        label = type,
+                        accent = accentForType(typeKeys[i]),
+                        label = typeFilters[i],
                     )
                 }
             }
@@ -229,7 +232,7 @@ private fun PlaceListCard(dog: Dog, onClick: () -> Unit) {
                 )
                 Spacer(Modifier.height(2.dp))
                 Text(
-                    text = dog.type,
+                    text = localizeType(dog.type),
                     fontSize = 12.sp,
                     color = accentForType(dog.type),
                     fontWeight = FontWeight.Medium,

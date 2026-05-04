@@ -46,6 +46,7 @@ import com.example.dogmap.ui.components.MarkerGlyph
 import com.example.dogmap.ui.components.PawPlaceBackground
 import com.example.dogmap.ui.components.RatingBar
 import com.example.dogmap.ui.components.accentForType
+import com.example.dogmap.ui.components.typeKey
 import com.example.dogmap.ui.theme.BrandPrimary
 import com.example.dogmap.viewmodel.DogViewModel
 
@@ -62,7 +63,7 @@ fun AddScreen(
 
     var name by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
-    var type by rememberSaveable { mutableStateOf("Parque") }
+    var selectedTypeIndex by rememberSaveable { mutableStateOf(0) }
     var rating by rememberSaveable { mutableStateOf(0f) }
     var isPublic by rememberSaveable { mutableStateOf(false) }
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
@@ -72,6 +73,7 @@ fun AddScreen(
         ActivityResultContracts.GetContent()
     ) { uri -> if (uri != null) imageUri = uri }
 
+    val typeKeys = listOf("park", "beach", "restaurant", "vet", "cafe")
     val typeOptions = listOf(
         stringResource(R.string.type_park),
         stringResource(R.string.type_beach),
@@ -179,11 +181,11 @@ fun AddScreen(
                     SectionLabel(stringResource(R.string.type))
 
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        items(typeOptions) { option ->
+                        items(typeOptions.indices.toList()) { i ->
                             TypeChip(
-                                type = option,
-                                selected = type == option,
-                                onClick = { type = option },
+                                type = typeOptions[i],
+                                selected = selectedTypeIndex == i,
+                                onClick = { selectedTypeIndex = i },
                             )
                         }
                     }
@@ -288,7 +290,7 @@ fun AddScreen(
                                     description = description,
                                     latitude = lat,
                                     longitude = lon,
-                                    type = type,
+                                    type = typeKeys[selectedTypeIndex],
                                     rating = rating,
                                     imageUrl = imageUri?.toString() ?: "",
                                     isPublic = isPublic,

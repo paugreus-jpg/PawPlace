@@ -99,7 +99,7 @@ fun ProfileScreen(
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "PERFIL",
+                        text = stringResource(R.string.profile_label),
                         fontSize = 11.sp,
                         letterSpacing = 2.sp,
                         color = BrandPrimary.copy(alpha = 0.85f),
