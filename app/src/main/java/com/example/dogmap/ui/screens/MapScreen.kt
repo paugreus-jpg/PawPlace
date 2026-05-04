@@ -3,6 +3,7 @@ package com.example.dogmap.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -92,7 +93,7 @@ fun MapScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
         viewModel.snackbarMessage.collect { msg ->
-            snackbarHostState.showSnackbar(msg)
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
         }
     }
 

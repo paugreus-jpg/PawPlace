@@ -115,7 +115,10 @@ class DogViewModel(
             _snackbarMessage.tryEmit("Inicia sesión para dar me gusta")
             return
         }
-        if (dog.remoteId.isBlank()) return
+        if (dog.remoteId.isBlank()) {
+            _snackbarMessage.tryEmit("Solo puedes dar me gusta a ubicaciones de la comunidad")
+            return
+        }
         viewModelScope.launch {
             try {
                 repository.toggleLike(dog.remoteId, uid)
@@ -131,7 +134,10 @@ class DogViewModel(
             _snackbarMessage.tryEmit("Inicia sesión para guardar favoritos")
             return
         }
-        if (dog.remoteId.isBlank()) return
+        if (dog.remoteId.isBlank()) {
+            _snackbarMessage.tryEmit("Solo puedes guardar en favoritos ubicaciones de la comunidad")
+            return
+        }
         viewModelScope.launch {
             val ok = favoritesRepository.toggleFavorite(uid, dog.remoteId)
             if (!ok) _snackbarMessage.tryEmit("No se pudo actualizar favoritos")

@@ -1,0 +1,40 @@
+<!--
+  PawPlace · In-app vector mark (use anywhere — splash, headers, empty states)
+  Path: app/src/main/res/drawable/ic_pawplace_logo.xml
+  Usage in Compose:  Icon(painter = painterResource(R.drawable.ic_pawplace_logo), ...)
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <path
+        android:fillType="evenOdd"
+        android:pathData="M60,6 C85.4,6 106,26.6 106,52 C106,80 76.5,104 60,114 C43.5,104 14,80 14,52 C14,26.6 34.6,6 60,6 Z M60,70 C52,70 46,64 46,57 C46,50 52,44 60,44 C68,44 74,50 74,57 C74,64 68,70 60,70 Z M44,38 m-5.4,0 a5.4,6.6 0 1,0 10.8,0 a5.4,6.6 0 1,0 -10.8,0 M53.5,30.5 m-4.8,0 a4.8,6.2 0 1,0 9.6,0 a4.8,6.2 0 1,0 -9.6,0 M66.5,30.5 m-4.8,0 a4.8,6.2 0 1,0 9.6,0 a4.8,6.2 0 1,0 -9.6,0 M76,38 m-5.4,0 a5.4,6.6 0 1,0 10.8,0 a5.4,6.6 0 1,0 -10.8,0">
+        <aapt:attr name="android:fillColor" xmlns:aapt="http://schemas.android.com/aapt">
+            <gradient
+                android:type="linear"
+                android:startX="20"
+                android:startY="6"
+                android:endX="100"
+                android:endY="116">
+                <item android:offset="0"   android:color="#FFEAF6FF" />
+                <item android:offset="0.5" android:color="#FF7DD8FF" />
+                <item android:offset="1"   android:color="#FF0A2A3A" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <path
+        android:fillAlpha="0.30"
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M60,8 C76,8 90,19 96,34 C82,26 64,28 50,36 C36,44 28,58 26,74 C20,66 16,60 16,52 C16,28 36,8 60,8 Z" />
+
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#7DD8FF"
+        android:strokeAlpha="0.55"
+        android:strokeWidth="0.8"
+        android:pathData="M60,6 C85.4,6 106,26.6 106,52 C106,80 76.5,104 60,114 C43.5,104 14,80 14,52 C14,26.6 34.6,6 60,6 Z" />
+</vector>

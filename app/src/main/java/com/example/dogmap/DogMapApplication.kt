@@ -1,6 +1,7 @@
 package com.example.dogmap
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.dogmap.BuildConfig
@@ -24,6 +25,14 @@ class DogMapApplication : Application() {
         if (AppCompatDelegate.getApplicationLocales().isEmpty) {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("es"))
         }
+
+        // Apply saved night mode before any Activity is created to avoid calling
+        // setDefaultNightMode during Compose composition (which can trigger a spurious recreate)
+        val prefs = getSharedPreferences("pawplace_settings", Context.MODE_PRIVATE)
+        val isDark = prefs.getBoolean("dark_theme", true)
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        )
 
         MapboxOptions.accessToken = BuildConfig.MAPBOX_PUBLIC_TOKEN
 

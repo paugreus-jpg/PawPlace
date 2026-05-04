@@ -19,12 +19,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _isDarkTheme = MutableStateFlow(prefs.getBoolean("dark_theme", true))
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
-    init {
-        AppCompatDelegate.setDefaultNightMode(
-            if (_isDarkTheme.value) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-        )
-    }
-
     fun setLanguage(tag: String) {
         _languageTag.value = tag
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
