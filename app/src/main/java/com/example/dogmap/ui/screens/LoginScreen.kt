@@ -3,8 +3,12 @@
 // Auth logic (AuthViewModel + validators) preserved exactly.
 package com.example.dogmap.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -16,8 +20,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,6 +43,9 @@ import com.example.dogmap.ui.components.PawPlaceBackground
 import com.example.dogmap.ui.components.PawPlaceLogo
 import com.example.dogmap.ui.theme.BrandPrimary
 import com.example.dogmap.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 @Composable
 fun LoginScreen(
@@ -48,6 +57,27 @@ fun LoginScreen(
     val state by viewModel.state.collectAsState()
 
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val webClientId = stringResource(R.string.google_web_client_id)
+    val googleSignInClient = remember(webClientId) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+        GoogleSignIn.getClient(context, gso)
+    }
+    val googleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            viewModel.signInWithGoogle(account.idToken)
+        } catch (e: ApiException) {
+            viewModel.signInWithGoogle(null)
+        }
+    }
 
     LaunchedEffect(state.isAuthenticated) {
         if (state.isAuthenticated) onLoginSuccess()
@@ -70,7 +100,7 @@ fun LoginScreen(
             PawPlaceLogo(size = 76.dp)
             Spacer(Modifier.height(14.dp))
             Text(
-                text = "PawPlace",
+                text = stringResource(R.string.app_name),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFFF2F6F8),
@@ -78,7 +108,7 @@ fun LoginScreen(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "BIENVENIDO DE NUEVO",
+                text = stringResource(R.string.welcome_back),
                 fontSize = 11.sp,
                 letterSpacing = 2.sp,
                 color = BrandPrimary.copy(alpha = 0.85f),
@@ -146,6 +176,31 @@ fun LoginScreen(
                     label = stringResource(R.string.enter_button),
                 )
 
+                Spacer(Modifier.height(12.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    HorizontalDivider(Modifier.weight(1f), color = Color(0x33FFFFFF))
+                    Text(
+                        text = "  ${stringResource(R.string.or)}  ",
+                        color = Color(0x80F2F6F8),
+                        fontSize = 12.sp,
+                    )
+                    HorizontalDivider(Modifier.weight(1f), color = Color(0x33FFFFFF))
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                GoogleSignInButton(
+                    onClick = {
+                        googleSignInClient.signOut()
+                        googleLauncher.launch(googleSignInClient.signInIntent)
+                    },
+                    isLoading = state.isLoading,
+                )
+
                 Spacer(Modifier.height(8.dp))
 
                 TextButton(
@@ -155,14 +210,14 @@ fun LoginScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(SpanStyle(color = Color(0x99F2F6F8))) {
-                                append("¿No tienes cuenta? ")
+                                append(stringResource(R.string.no_account_prefix))
                             }
                             withStyle(
                                 SpanStyle(
                                     color = BrandPrimary,
                                     fontWeight = FontWeight.SemiBold
                                 )
-                            ) { append("Regístrate") }
+                            ) { append(stringResource(R.string.register_action)) }
                         },
                         textAlign = TextAlign.Center,
                         fontSize = 13.sp,
@@ -214,6 +269,49 @@ internal fun GlassTextField(
             cursorColor = BrandPrimary,
         ),
     )
+}
+
+@Composable
+internal fun GoogleSignInButton(
+    onClick: () -> Unit,
+    isLoading: Boolean,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        enabled = !isLoading,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(52.dp),
+        shape = RoundedCornerShape(14.dp),
+        border = BorderStroke(1.dp, Color(0x33FFFFFF)),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = Color(0x0AFFFFFF),
+            contentColor = Color(0xFFF2F6F8),
+            disabledContainerColor = Color(0x14FFFFFF),
+            disabledContentColor = Color(0x66F2F6F8),
+        ),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .background(Color.White),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "G",
+                color = Color(0xFF4285F4),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        Spacer(Modifier.width(10.dp))
+        Text(
+            text = stringResource(R.string.sign_in_with_google),
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+        )
+    }
 }
 
 @Composable

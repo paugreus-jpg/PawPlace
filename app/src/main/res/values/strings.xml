@@ -160,6 +160,11 @@
     <string name="hours_ago">Hace %d h</string>
     <string name="days_ago">Hace %d d</string>
 
+    <!-- Google Sign-In -->
+    <string name="google_web_client_id" translatable="false">1032906926652-0ekrqguqljsi0b51vs0vupfdqijbbk9j.apps.googleusercontent.com</string>
+    <string name="sign_in_with_google">Continuar con Google</string>
+    <string name="google_sign_in_error">Error al iniciar sesión con Google</string>
+
     <!-- Ajustes de idioma y tema -->
     <string name="settings_title">Ajustes</string>
     <string name="settings_language">Idioma</string>
@@ -176,6 +181,15 @@
     <!-- Acciones sociales -->
     <string name="like_action">Me gusta</string>
     <string name="share">Compartir</string>
+
+    <!-- Auth pantallas -->
+    <string name="welcome_back">BIENVENIDO DE NUEVO</string>
+    <string name="join_community">ÚNETE A LA COMUNIDAD</string>
+    <string name="or">o</string>
+    <string name="no_account_prefix">¿No tienes cuenta? </string>
+    <string name="register_action">Regístrate</string>
+    <string name="already_have_account_prefix">¿Ya tienes cuenta? </string>
+    <string name="login_action">Inicia sesión</string>
 
     <!-- Strings extraídas de pantallas -->
     <string name="basic_info">Información básica</string>

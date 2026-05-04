@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -118,6 +119,28 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
                 val result = auth.createUserWithEmailAndPassword(s.email.trim(), s.password).await()
                 val uid = result.user?.uid.orEmpty()
                 userRepository.ensureUserDocument(uid, s.email.trim(), s.displayName.trim())
+                _state.update { it.copy(isLoading = false, isAuthenticated = true) }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false, generalError = translate(e)) }
+            }
+        }
+    }
+
+    fun signInWithGoogle(idToken: String?) {
+        if (idToken == null) {
+            _state.update { it.copy(generalError = "Error de Google Sign-In") }
+            return
+        }
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, generalError = null) }
+            try {
+                val credential = GoogleAuthProvider.getCredential(idToken, null)
+                val result = auth.signInWithCredential(credential).await()
+                val uid = result.user?.uid.orEmpty()
+                val email = result.user?.email.orEmpty()
+                val displayName = result.user?.displayName.orEmpty()
+                    .ifBlank { email.substringBefore("@") }
+                userRepository.ensureUserDocument(uid, email, displayName)
                 _state.update { it.copy(isLoading = false, isAuthenticated = true) }
             } catch (e: Exception) {
                 _state.update { it.copy(isLoading = false, generalError = translate(e)) }

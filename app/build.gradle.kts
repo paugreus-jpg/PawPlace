@@ -93,6 +93,9 @@ dependencies {
     // Location services (FusedLocationProvider para grabación de paseos)
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+
     // Kotlinx Serialization (TrackPoint list -> JSON en Room)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 

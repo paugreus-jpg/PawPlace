@@ -3,6 +3,8 @@
 // AuthViewModel + validators preserved exactly.
 package com.example.dogmap.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -15,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -34,6 +37,9 @@ import com.example.dogmap.ui.components.PawPlaceBackground
 import com.example.dogmap.ui.components.PawPlaceLogo
 import com.example.dogmap.ui.theme.BrandPrimary
 import com.example.dogmap.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 @Composable
 fun RegisterScreen(
@@ -46,6 +52,27 @@ fun RegisterScreen(
 
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmVisible by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val webClientId = stringResource(R.string.google_web_client_id)
+    val googleSignInClient = remember(webClientId) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+        GoogleSignIn.getClient(context, gso)
+    }
+    val googleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            viewModel.signInWithGoogle(account.idToken)
+        } catch (e: ApiException) {
+            viewModel.signInWithGoogle(null)
+        }
+    }
 
     LaunchedEffect(state.isAuthenticated) {
         if (state.isAuthenticated) onRegisterSuccess()
@@ -77,7 +104,7 @@ fun RegisterScreen(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = "ÚNETE A LA COMUNIDAD",
+                text = stringResource(R.string.join_community),
                 fontSize = 11.sp,
                 letterSpacing = 2.sp,
                 color = BrandPrimary.copy(alpha = 0.85f),
@@ -165,9 +192,34 @@ fun RegisterScreen(
 
                 CyanButton(
                     onClick = { viewModel.register() },
-                    enabled = canSubmit,
+                    enabled = !state.isLoading,
                     isLoading = state.isLoading,
                     label = stringResource(R.string.register_title),
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    HorizontalDivider(Modifier.weight(1f), color = Color(0x33FFFFFF))
+                    Text(
+                        text = "  ${stringResource(R.string.or)}  ",
+                        color = Color(0x80F2F6F8),
+                        fontSize = 12.sp,
+                    )
+                    HorizontalDivider(Modifier.weight(1f), color = Color(0x33FFFFFF))
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                GoogleSignInButton(
+                    onClick = {
+                        googleSignInClient.signOut()
+                        googleLauncher.launch(googleSignInClient.signInIntent)
+                    },
+                    isLoading = state.isLoading,
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -179,14 +231,14 @@ fun RegisterScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(SpanStyle(color = Color(0x99F2F6F8))) {
-                                append("¿Ya tienes cuenta? ")
+                                append(stringResource(R.string.already_have_account_prefix))
                             }
                             withStyle(
                                 SpanStyle(
                                     color = BrandPrimary,
                                     fontWeight = FontWeight.SemiBold
                                 )
-                            ) { append("Inicia sesión") }
+                            ) { append(stringResource(R.string.login_action)) }
                         },
                         textAlign = TextAlign.Center,
                         fontSize = 13.sp,
