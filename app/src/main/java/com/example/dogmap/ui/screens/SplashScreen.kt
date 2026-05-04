@@ -4,10 +4,10 @@ package com.example.dogmap.ui.screens
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,11 +17,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.dogmap.ui.components.PawPlaceLogo
+import com.dogmap.R
 import com.example.dogmap.ui.theme.BrandPrimary
 import kotlinx.coroutines.delay
 
@@ -102,7 +103,11 @@ fun SplashScreen(onStartClick: () -> Unit) {
                     )
                 }
                 Box(Modifier.scale(pulse)) {
-                    PawPlaceLogo(size = 108.dp)
+                    Image(
+                        painter = painterResource(R.drawable.ic_launcher_monochrome),
+                        contentDescription = "PawPlace",
+                        modifier = Modifier.size(108.dp)
+                    )
                 }
             }
 

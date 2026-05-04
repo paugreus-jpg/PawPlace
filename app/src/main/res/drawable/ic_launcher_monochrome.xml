@@ -1,0 +1,22 @@
+<!--
+  PawPlace · Themed (monochrome) launcher icon — Android 13+
+  Single-color silhouette; system tints it to match the user's wallpaper.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:translateX="18"
+        android:translateY="18"
+        android:scaleX="0.6"
+        android:scaleY="0.6">
+
+        <path
+            android:fillType="evenOdd"
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M60,6 C85.4,6 106,26.6 106,52 C106,80 76.5,104 60,114 C43.5,104 14,80 14,52 C14,26.6 34.6,6 60,6 Z M60,70 C52,70 46,64 46,57 C46,50 52,44 60,44 C68,44 74,50 74,57 C74,64 68,70 60,70 Z M44,38 m-5.4,0 a5.4,6.6 0 1,0 10.8,0 a5.4,6.6 0 1,0 -10.8,0 M53.5,30.5 m-4.8,0 a4.8,6.2 0 1,0 9.6,0 a4.8,6.2 0 1,0 -9.6,0 M66.5,30.5 m-4.8,0 a4.8,6.2 0 1,0 9.6,0 a4.8,6.2 0 1,0 -9.6,0 M76,38 m-5.4,0 a5.4,6.6 0 1,0 10.8,0 a5.4,6.6 0 1,0 -10.8,0" />
+    </group>
+</vector>
