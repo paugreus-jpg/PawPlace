@@ -34,10 +34,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.toArgb
 import com.dogmap.R
 import com.example.dogmap.data.models.Dog
 import com.example.dogmap.ui.LocalViewModelFactory
 import com.example.dogmap.ui.components.GlassPlaceSheet
+import com.example.dogmap.ui.map.buildEmojiMarkerBitmap
+import com.example.dogmap.ui.theme.BrandPrimary
+import com.example.dogmap.ui.theme.BrandSecondary
 import com.example.dogmap.viewmodel.DogViewModel
 import com.mapbox.bindgen.Value
 import com.mapbox.geojson.Point
@@ -58,16 +64,23 @@ private const val PAWPLACE_DARK_STYLE_URL      = "mapbox://styles/mapbox/dark-v1
 private const val PAWPLACE_LIGHT_STYLE_URL     = "mapbox://styles/mapbox/light-v11"
 private const val PAWPLACE_SATELLITE_URL       = "mapbox://styles/mapbox/satellite-streets-v12"
 
-private fun iconResForType(type: String): Int = when {
-    type.equals("parque", ignoreCase = true) || type.equals("park", ignoreCase = true) ->
-        R.drawable.ic_marker_park
-    type.equals("playa", ignoreCase = true) || type.equals("beach", ignoreCase = true) ->
-        R.drawable.ic_marker_beach
-    type.equals("restaurante", ignoreCase = true) || type.equals("restaurant", ignoreCase = true) ->
-        R.drawable.ic_marker_restaurant
-    type.equals("veterinario", ignoreCase = true) || type.equals("vet", ignoreCase = true) ->
-        R.drawable.ic_marker_vet
-    else -> R.drawable.ic_pawplace_marker
+private fun emojiForType(type: String): String = when {
+    type.equals("parque", ignoreCase = true) || type.equals("park", ignoreCase = true)             -> "🌳"
+    type.equals("playa", ignoreCase = true) || type.equals("beach", ignoreCase = true)             -> "🏖️"
+    type.equals("restaurante", ignoreCase = true) || type.equals("restaurant", ignoreCase = true)  -> "🍽️"
+    type.equals("veterinario", ignoreCase = true) || type.equals("vet", ignoreCase = true)         -> "🩺"
+    else -> "📍"
+}
+
+@OptIn(MapboxExperimental::class)
+@Composable
+private fun rememberEmojiMarker(emoji: String, color: Color) = run {
+    val context = LocalContext.current
+    val colorInt = color.toArgb()
+    val painter = remember(emoji, colorInt) {
+        BitmapPainter(buildEmojiMarkerBitmap(context, emoji, colorInt).asImageBitmap())
+    }
+    rememberIconImage(key = "$emoji|$colorInt", painter = painter)
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -88,6 +101,7 @@ fun MapScreen(
     val publicDogs by viewModel.publicDogs.collectAsState()
     val mapFilter by viewModel.mapFilter.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
+    val currentUid by viewModel.currentUid.collectAsState()
     val isDark = isSystemInDarkTheme()
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -118,10 +132,6 @@ fun MapScreen(
         locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
-    val markerIcon = rememberIconImage(
-        key = R.drawable.ic_pawplace_marker,
-        painter = painterResource(R.drawable.ic_pawplace_marker)
-    )
     val markerActiveIcon = rememberIconImage(
         key = R.drawable.ic_pawplace_marker_active,
         painter = painterResource(R.drawable.ic_pawplace_marker_active)
@@ -130,22 +140,16 @@ fun MapScreen(
         key = R.drawable.ic_pawplace_new_pin,
         painter = painterResource(R.drawable.ic_pawplace_new_pin)
     )
-    val markerParkIcon = rememberIconImage(
-        key = R.drawable.ic_marker_park,
-        painter = painterResource(R.drawable.ic_marker_park)
-    )
-    val markerBeachIcon = rememberIconImage(
-        key = R.drawable.ic_marker_beach,
-        painter = painterResource(R.drawable.ic_marker_beach)
-    )
-    val markerRestaurantIcon = rememberIconImage(
-        key = R.drawable.ic_marker_restaurant,
-        painter = painterResource(R.drawable.ic_marker_restaurant)
-    )
-    val markerVetIcon = rememberIconImage(
-        key = R.drawable.ic_marker_vet,
-        painter = painterResource(R.drawable.ic_marker_vet)
-    )
+    val parkMineIcon            = rememberEmojiMarker("🌳",  BrandPrimary)
+    val beachMineIcon           = rememberEmojiMarker("🏖️", BrandPrimary)
+    val restaurantMineIcon      = rememberEmojiMarker("🍽️", BrandPrimary)
+    val vetMineIcon             = rememberEmojiMarker("🩺",  BrandPrimary)
+    val defaultMineIcon         = rememberEmojiMarker("📍",  BrandPrimary)
+    val parkCommunityIcon       = rememberEmojiMarker("🌳",  BrandSecondary)
+    val beachCommunityIcon      = rememberEmojiMarker("🏖️", BrandSecondary)
+    val restaurantCommunityIcon = rememberEmojiMarker("🍽️", BrandSecondary)
+    val vetCommunityIcon        = rememberEmojiMarker("🩺",  BrandSecondary)
+    val defaultCommunityIcon    = rememberEmojiMarker("📍",  BrandSecondary)
 
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
     val haloRadius by infiniteTransition.animateFloat(
@@ -280,14 +284,22 @@ fun MapScreen(
 
             visibleDogs.forEach { dog ->
                 val isActive = selectedDog?.remoteId?.let { it == dog.remoteId } == true
-                val typeIcon = when {
-                    isActive -> markerActiveIcon
-                    else -> when (iconResForType(dog.type)) {
-                        R.drawable.ic_marker_park -> markerParkIcon
-                        R.drawable.ic_marker_beach -> markerBeachIcon
-                        R.drawable.ic_marker_restaurant -> markerRestaurantIcon
-                        R.drawable.ic_marker_vet -> markerVetIcon
-                        else -> markerIcon
+                val isMine = currentUid != null && dog.authorId == currentUid
+                val typeIcon = if (isActive) {
+                    markerActiveIcon
+                } else {
+                    val emoji = emojiForType(dog.type)
+                    when {
+                        emoji == "🌳"  && isMine -> parkMineIcon
+                        emoji == "🌳"            -> parkCommunityIcon
+                        emoji == "🏖️" && isMine -> beachMineIcon
+                        emoji == "🏖️"           -> beachCommunityIcon
+                        emoji == "🍽️" && isMine -> restaurantMineIcon
+                        emoji == "🍽️"           -> restaurantCommunityIcon
+                        emoji == "🩺"  && isMine -> vetMineIcon
+                        emoji == "🩺"            -> vetCommunityIcon
+                        isMine                   -> defaultMineIcon
+                        else                     -> defaultCommunityIcon
                     }
                 }
                 PointAnnotation(
