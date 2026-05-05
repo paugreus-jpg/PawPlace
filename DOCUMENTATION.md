@@ -238,6 +238,23 @@ The application is feature-complete for delivery. All core flows — authenticat
 
 ---
 
+## 13. Conclusions
+
+Dogmap demonstrates that a fully-featured, production-grade Android application can be built entirely on the modern Jetpack + Firebase + Mapbox stack without compromising on architecture or maintainability.
+
+The key engineering decisions that shaped the project:
+
+- **Offline-first via Room** ensures the app remains functional with no network connection, while Firestore `snapshotListener`s keep data eventually consistent without any manual polling logic.
+- **Single source of truth in the Repository layer** means ViewModels never talk directly to Firebase or Room — all data access is funnelled through a consistent API, making each layer independently testable.
+- **Foreground service for GPS tracking** was the only viable approach for continuous walk recording on modern Android; the trade-off (a persistent system notification) is an Android platform constraint, not a design choice.
+- **Mapbox over Google Maps** was chosen for its richer annotation API and the ability to render custom emoji markers via `EmojiMarkerFactory` without relying on bitmap pre-rendering.
+- **The namespace split (`com.dogmap` vs `com.example.dogmap`)** is an intentional Gradle configuration that separates the application identity from the source package, requiring the explicit `import com.dogmap.R` rule enforced at every commit.
+- **WorkManager for reminders** provides guaranteed execution even after process death, which is essential for walk reminder notifications that must fire at a scheduled time regardless of app state.
+
+The result is a codebase that scales cleanly: adding a new feature means adding a model, a DAO query, a repository method, a ViewModel state property, and a Compose screen — each step isolated and independently verifiable. The documented skill model (`.claude/skills/`) reflects this separation, assigning each concern to a specialized agent so that AI-assisted development remains precise and does not accidentally cross architectural boundaries.
+
+---
+
 ## 12. Glossary
 
 - **Dog / Place** — A geolocated point of interest associated with a dog or dog-friendly location.

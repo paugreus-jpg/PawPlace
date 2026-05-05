@@ -238,6 +238,23 @@ La aplicación está completa funcionalmente para su entrega. Todos los flujos p
 
 ---
 
+## 13. Conclusiones
+
+Dogmap demuestra que es posible construir una aplicación Android completa y de calidad de producción íntegramente sobre el stack moderno de Jetpack + Firebase + Mapbox sin sacrificar arquitectura ni mantenibilidad.
+
+Las decisiones de ingeniería clave que dieron forma al proyecto:
+
+- **Offline-first mediante Room** garantiza que la app funcione sin conexión a red, mientras que los `snapshotListener`s de Firestore mantienen los datos eventualmente consistentes sin ninguna lógica de polling manual.
+- **Fuente única de verdad en la capa Repository** significa que los ViewModels nunca hablan directamente con Firebase o Room — todo acceso a datos pasa por una API consistente, lo que hace que cada capa sea testeable de forma independiente.
+- **Servicio en primer plano para el seguimiento GPS** fue la única opción viable para la grabación continua de paseos en Android moderno; la contrapartida (una notificación de sistema persistente) es una restricción de la plataforma Android, no una decisión de diseño.
+- **Mapbox en lugar de Google Maps** se eligió por su API de anotaciones más rica y la capacidad de renderizar marcadores emoji personalizados mediante `EmojiMarkerFactory` sin depender de la prerenderización de bitmaps.
+- **La división del namespace (`com.dogmap` vs `com.example.dogmap`)** es una configuración de Gradle intencional que separa la identidad de la aplicación del paquete fuente, lo que requiere la regla explícita `import com.dogmap.R` verificada en cada commit.
+- **WorkManager para recordatorios** proporciona ejecución garantizada incluso tras la muerte del proceso, lo que es esencial para las notificaciones de recordatorio de paseo que deben dispararse a una hora programada independientemente del estado de la app.
+
+El resultado es una base de código que escala limpiamente: añadir una nueva funcionalidad implica añadir un modelo, una consulta DAO, un método de repositorio, una propiedad de estado en el ViewModel y una pantalla Compose — cada paso aislado y verificable de forma independiente. El modelo de skills documentado (`.claude/skills/`) refleja esta separación, asignando cada responsabilidad a un agente especializado para que el desarrollo asistido por IA sea preciso y no cruce accidentalmente los límites arquitectónicos.
+
+---
+
 ## 12. Glosario
 
 - **Perro / Lugar** — Un punto de interés geolocalizado asociado a un perro o a un lugar dog-friendly.
