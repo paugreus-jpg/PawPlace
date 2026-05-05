@@ -425,7 +425,11 @@ fun MapScreen(
     val isLiked by viewModel.likeStateFor(selectedDog?.remoteId ?: "").collectAsState()
 
     if (selectedDog != null) {
-        val dog = selectedDog!!
+        val baseDog = selectedDog!!
+        val liveDog by viewModel.observeDog(
+            baseDog.remoteId.ifBlank { baseDog.id.toString() }
+        ).collectAsState()
+        val dog = liveDog ?: baseDog
         val isFavorite by remember(dog.remoteId, favoriteIds) {
             derivedStateOf { dog.remoteId in favoriteIds }
         }

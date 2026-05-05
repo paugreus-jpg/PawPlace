@@ -38,7 +38,7 @@ class DogMapApplication : Application() {
 
         FirebaseAuth.getInstance().addAuthStateListener { auth ->
             val uid = auth.currentUser?.uid
-            if (uid != null) notificationsRepository.startSync(uid)
+            if (uid != null) notificationsRepository.startSync(uid, notificationPoster, notificationPreferences)
             else notificationsRepository.stopSync()
         }
     }

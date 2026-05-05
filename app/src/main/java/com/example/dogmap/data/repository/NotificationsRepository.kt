@@ -3,11 +3,15 @@ package com.example.dogmap.data.repository
 import com.example.dogmap.data.db.NotificationDao
 import com.example.dogmap.data.models.AppNotification
 import com.example.dogmap.data.models.NotificationType
+import com.example.dogmap.data.preferences.NotificationPreferences
+import com.example.dogmap.notifications.NotificationPoster
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -19,13 +23,19 @@ class NotificationsRepository(private val dao: NotificationDao) {
 
     fun unreadCountFlow(uid: String): Flow<Int> = dao.unreadCount(uid)
 
-    fun startSync(uid: String) {
+    fun startSync(
+        uid: String,
+        poster: NotificationPoster? = null,
+        preferences: NotificationPreferences? = null
+    ) {
         listenerRegistration?.remove()
         val firestore = FirebaseFirestore.getInstance()
+        var isFirstSnapshot = true
         listenerRegistration = firestore.collection("users/$uid/notifications")
             .addSnapshotListener { snapshots, error ->
                 if (error != null || snapshots == null) return@addSnapshotListener
-                val notifications = snapshots.documents.mapNotNull { doc ->
+
+                fun docToNotification(doc: com.google.firebase.firestore.DocumentSnapshot) =
                     runCatching {
                         AppNotification(
                             id = doc.id,
@@ -40,9 +50,22 @@ class NotificationsRepository(private val dao: NotificationDao) {
                             ownerUid = uid
                         )
                     }.getOrNull()
-                }
+
+                val allNotifications = snapshots.documents.mapNotNull { docToNotification(it) }
+
+                val incoming = if (isFirstSnapshot) emptyList()
+                else snapshots.documentChanges
+                    .filter { it.type == DocumentChange.Type.ADDED }
+                    .mapNotNull { docToNotification(it.document) }
+
+                isFirstSnapshot = false
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    dao.insertAll(notifications)
+                    dao.insertAll(allNotifications)
+                    if (incoming.isNotEmpty() && poster != null && preferences != null) {
+                        val settings = preferences.settingsFlow.first()
+                        incoming.forEach { poster.post(it, settings) }
+                    }
                 }
             }
     }

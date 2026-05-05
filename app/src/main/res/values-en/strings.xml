@@ -187,9 +187,9 @@
     <string name="join_community">JOIN THE COMMUNITY</string>
     <string name="or">or</string>
     <string name="no_account_prefix">Don\'t have an account? </string>
-    <string name="register_action">Sign up</string>
+    <string name="register_action"> Sign up</string>
     <string name="already_have_account_prefix">Already have an account? </string>
-    <string name="login_action">Log in</string>
+    <string name="login_action"> Log in</string>
 
     <!-- Extracted from screens -->
     <string name="basic_info">Basic information</string>

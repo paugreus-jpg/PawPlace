@@ -1,5 +1,7 @@
 package com.example.dogmap
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +31,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -47,7 +52,7 @@ import com.example.dogmap.viewmodel.NotificationsViewModel
 import com.example.dogmap.viewmodel.SettingsViewModel
 
 class MainActivity : AppCompatActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -64,6 +69,13 @@ class MainActivity : AppCompatActivity() {
                 val isDarkTheme by settingsVm.isDarkTheme.collectAsState()
 
                 DogMapTheme(darkTheme = isDarkTheme) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val notifPermState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+                        LaunchedEffect(Unit) {
+                            if (!notifPermState.status.isGranted) notifPermState.launchPermissionRequest()
+                        }
+                    }
+
                     val navController = rememberNavController()
                     val currentRoute by navController.currentBackStackEntryAsState()
 
