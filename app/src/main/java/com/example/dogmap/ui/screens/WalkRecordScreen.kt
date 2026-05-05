@@ -257,7 +257,7 @@ fun WalkRecordScreen(
 
     if (showSaveSheet) {
         val snap = saveSnapshot
-        if (snap != null && snap.first.isNotEmpty()) {
+        if (snap != null) {
             SaveWalkSheet(
                 points = snap.first,
                 distanceMeters = snap.second,
@@ -285,13 +285,6 @@ fun WalkRecordScreen(
                     )
                 }
             )
-        } else {
-            // Sin puntos: descartar directamente
-            LaunchedEffect(Unit) {
-                showSaveSheet = false
-                walkVm.resetRecording()
-                onBackClick()
-            }
         }
     }
 }
@@ -311,6 +304,7 @@ private fun SaveWalkSheet(
     var isPublic by remember { mutableStateOf(false) }
     var selectedDog by remember(userDogs) { mutableStateOf(userDogs.firstOrNull()) }
     var dropdownOpen by remember { mutableStateOf(false) }
+    var dogNameText by remember { mutableStateOf("") }
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(
@@ -353,10 +347,13 @@ private fun SaveWalkSheet(
 
             // Dropdown de perro
             if (userDogs.isEmpty()) {
-                Text(
-                    stringResource(R.string.walk_no_dogs_available),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
+                OutlinedTextField(
+                    value = dogNameText,
+                    onValueChange = { dogNameText = it },
+                    label = { Text(stringResource(R.string.walk_select_dog)) },
+                    placeholder = { Text("Opcional") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
                 )
             } else {
                 ExposedDropdownMenuBox(
@@ -417,13 +414,19 @@ private fun SaveWalkSheet(
                 ) { Text(stringResource(R.string.walk_discard)) }
                 Button(
                     onClick = {
-                        val dog = selectedDog
-                        if (name.isNotBlank() && dog != null) {
-                            onSave(name, description, dog.remoteId.ifBlank { dog.id.toString() }, dog.name, isPublic)
+                        if (name.isNotBlank()) {
+                            val dog = selectedDog
+                            onSave(
+                                name,
+                                description,
+                                dog?.remoteId?.ifBlank { dog.id.toString() } ?: "",
+                                dog?.name ?: dogNameText.trim(),
+                                isPublic
+                            )
                         }
                     },
                     modifier = Modifier.weight(1f),
-                    enabled = name.isNotBlank() && selectedDog != null
+                    enabled = name.isNotBlank()
                 ) { Text(stringResource(R.string.walk_save)) }
             }
             Spacer(Modifier.height(8.dp))

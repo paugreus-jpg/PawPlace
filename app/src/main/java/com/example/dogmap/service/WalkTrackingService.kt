@@ -24,6 +24,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,6 +46,8 @@ class WalkTrackingService : Service() {
     private var startElapsedMs: Long = 0L
     private var accumulatedMs: Long = 0L
     private var pauseStartMs: Long = 0L
+    private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private var timerJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -53,6 +63,24 @@ class WalkTrackingService : Service() {
             ACTION_STOP -> stopRecording()
         }
         return START_STICKY
+    }
+
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob = serviceScope.launch {
+            while (isActive) {
+                delay(1000L)
+                if (_state.value == State.Recording) {
+                    _durationSeconds.value = (accumulatedMs + System.currentTimeMillis() - startElapsedMs) / 1000L
+                    notifyProgress()
+                }
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        timerJob = null
     }
 
     private fun startRecording() {
@@ -72,6 +100,7 @@ class WalkTrackingService : Service() {
         startElapsedMs = System.currentTimeMillis()
         accumulatedMs = 0L
         _state.value = State.Recording
+        startTimer()
 
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 3000L)
             .setMinUpdateIntervalMillis(2000L)
@@ -92,9 +121,6 @@ class WalkTrackingService : Service() {
                         }
                     }
                     lastLocation = loc
-                    val elapsedSinceResume = System.currentTimeMillis() - startElapsedMs
-                    _durationSeconds.value = (accumulatedMs + elapsedSinceResume) / 1000L
-                    notifyProgress()
                 }
             }
         }
@@ -108,9 +134,11 @@ class WalkTrackingService : Service() {
 
     private fun pauseRecording() {
         if (_state.value != State.Recording) return
-        _state.value = State.Paused
+        stopTimer()
         pauseStartMs = System.currentTimeMillis()
         accumulatedMs += pauseStartMs - startElapsedMs
+        _durationSeconds.value = accumulatedMs / 1000L
+        _state.value = State.Paused
         locationCallback?.let { fusedClient.removeLocationUpdates(it) }
         notifyProgress()
     }
@@ -121,6 +149,7 @@ class WalkTrackingService : Service() {
             != PackageManager.PERMISSION_GRANTED) return
         _state.value = State.Recording
         startElapsedMs = System.currentTimeMillis()
+        startTimer()
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 3000L)
             .setMinUpdateIntervalMillis(2000L)
             .setMinUpdateDistanceMeters(3f)
@@ -133,6 +162,7 @@ class WalkTrackingService : Service() {
     }
 
     private fun stopRecording() {
+        stopTimer()
         locationCallback?.let { fusedClient.removeLocationUpdates(it) }
         locationCallback = null
         if (_state.value == State.Recording) {
@@ -194,6 +224,8 @@ class WalkTrackingService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        stopTimer()
+        serviceScope.cancel()
         locationCallback?.let { fusedClient.removeLocationUpdates(it) }
         super.onDestroy()
     }
