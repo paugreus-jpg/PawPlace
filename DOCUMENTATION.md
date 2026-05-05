@@ -33,6 +33,7 @@ The application implements the following user-facing features:
 
 ### 2.1 Authentication and User Management
 - Email/password sign-up and sign-in via **Firebase Authentication**.
+- **Google Sign-In** via `play-services-auth`, integrated with Firebase Auth.
 - First-launch profile setup flow (display name, city, pet info, photo).
 - Editable user profile, account deletion, and persistent session.
 
@@ -109,20 +110,25 @@ The Gradle namespace (`com.dogmap`) and the source package (`com.example.dogmap`
 ```
 app/src/main/java/com/example/dogmap/
 ├── DogMapApplication.kt          # Application class, DI bootstrapping
+├── MainActivity.kt
 ├── data/
-│   ├── db/DogDatabase.kt         # Room database (v6)
-│   ├── dao/                      # DogDao, WalkDao, NotificationDao
-│   ├── repository/               # DogRepository, WalkRepository, ...
-│   └── prefs/                    # NotificationPreferences (DataStore)
-├── models/                       # Dog, Walk, TrackPoint, AppNotification, User, Comment, ...
+│   ├── db/                       # DogDatabase.kt, DogDao, WalkDao, NotificationDao, DogTypeConverters
+│   ├── models/                   # Dog, Walk, TrackPoint, AppNotification, User, Comment, Favorite, NotificationType
+│   ├── preferences/              # NotificationPreferences (DataStore)
+│   └── repository/               # DogRepository, WalkRepository, NotificationsRepository, UserRepository, FavoritesRepository
+├── notifications/
+│   ├── NotificationPoster.kt
+│   └── work/                     # WalkReminderWorker, WalkReminderScheduler
 ├── service/WalkTrackingService.kt
 ├── ui/
+│   ├── components/               # DogCard, UserAvatar, GlassUi, GlassPlaceSheet, RatingBar, PawPlaceLogo
+│   ├── map/                      # EmojiMarkerFactory
 │   ├── navigation/               # Route.kt, NavGraph.kt
-│   ├── screens/                  # All Composable screens
-│   ├── notifications/            # Notification UI + settings
-│   ├── theme/                    # Material 3 theme
-│   └── viewmodel/                # ViewModels + DogViewModelFactory
-└── util/                         # Helpers, formatters, NotificationPoster
+│   ├── notifications/            # NotificationsScreen, NotificationsSettingsScreen, NotificationItem
+│   ├── screens/                  # All Composable screens (18+)
+│   └── theme/                    # Color.kt, Typography.kt, Theme.kt
+└── viewmodel/                    # DogViewModel, WalkViewModel, UserViewModel, AuthViewModel,
+                                  # NotificationsViewModel, SettingsViewModel, DogViewModelFactory, ViewModelProvider
 ```
 
 ---
