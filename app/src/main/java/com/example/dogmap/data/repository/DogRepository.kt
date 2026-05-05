@@ -99,6 +99,20 @@ class DogRepository(private val dogDao: DogDao) {
         dogDao.deleteByAuthor(authorId)
     }
 
+    suspend fun deleteAllDogsCompletely() {
+        try {
+            val allDocs = dogsCollection.get().await()
+            for (doc in allDocs.documents) {
+                val likes = doc.reference.collection("likes").get().await()
+                for (like in likes.documents) like.reference.delete().await()
+                val comments = doc.reference.collection("comments").get().await()
+                for (comment in comments.documents) comment.reference.delete().await()
+                doc.reference.delete().await()
+            }
+        } catch (_: Exception) {}
+        dogDao.deleteAllDogs()
+    }
+
     suspend fun removeAllUserLikes(uid: String) {
         if (uid.isBlank()) return
         try {

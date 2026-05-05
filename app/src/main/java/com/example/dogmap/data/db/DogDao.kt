@@ -35,4 +35,7 @@ interface DogDao {
 
     @Query("SELECT * FROM dogs WHERE authorId = :authorId ORDER BY createdAt DESC")
     fun getDogsByAuthor(authorId: String): Flow<List<Dog>>
+
+    @Query("DELETE FROM dogs")
+    suspend fun deleteAllDogs()
 }
